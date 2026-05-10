@@ -77,7 +77,7 @@ pipeline {
                 branch 'PR-*'
             }
             steps {
-                withSonarQubeEnv(sonarInstance) {
+                withSonarQubeEnv('sonar-server') {
                     sh """
                         mvn sonar:sonar \
                             -Dsonar.projectKey=ai-agent-backend \
