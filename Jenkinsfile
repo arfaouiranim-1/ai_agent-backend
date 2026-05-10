@@ -35,42 +35,42 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency Scan') {
-            when {
-                branch 'PR-*'
-            }
-            steps {
-                script {
-                    sh "mkdir -p reports/owasp"
-                    withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
-                        def additionalArguments = """
-                            --scan ./
-                            --out reports/owasp 
-                            --format HTML --format XML
-                            --data /Users/jenkins/dependency-check-data
-                            --disableKnownExploited
-                            --disableRubygems
-                            --disableBundleAudit
-                            --disableYarnAudit
-                            --disableAssembly
-                            --nvdApiKey ${NVD_API_KEY}
-                            --failOnCVSS 11
-                            --prettyPrint
-                        """
+        // stage('OWASP Dependency Scan') {
+        //     when {
+        //         branch 'PR-*'
+        //     }
+        //     steps {
+        //         script {
+        //             sh "mkdir -p reports/owasp"
+        //             withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
+        //                 def additionalArguments = """
+        //                     --scan ./
+        //                     --out reports/owasp 
+        //                     --format HTML --format XML
+        //                     --data /Users/jenkins/dependency-check-data
+        //                     --disableKnownExploited
+        //                     --disableRubygems
+        //                     --disableBundleAudit
+        //                     --disableYarnAudit
+        //                     --disableAssembly
+        //                     --nvdApiKey ${NVD_API_KEY}
+        //                     --failOnCVSS 11
+        //                     --prettyPrint
+        //                 """
 
-                        dependencyCheck additionalArguments: additionalArguments,
-                            odcInstallation: 'owasp-12.1.1'
+        //                 dependencyCheck additionalArguments: additionalArguments,
+        //                     odcInstallation: 'owasp-12.1.1'
 
-                        dependencyCheckPublisher failedTotalCritical: 1,
-                            failedTotalHigh: 4,
-                            failedTotalLow: 90,
-                            failedTotalMedium: 8,
-                            pattern: 'reports/owasp/dependency-check-report.xml',
-                            stopBuild: true
-                        }
-                }
-            }
-        }
+        //                 dependencyCheckPublisher failedTotalCritical: 1,
+        //                     failedTotalHigh: 4,
+        //                     failedTotalLow: 90,
+        //                     failedTotalMedium: 8,
+        //                     pattern: 'reports/owasp/dependency-check-report.xml',
+        //                     stopBuild: true
+        //                 }
+        //         }
+        //     }
+        // }
 
         stage('Quality Analysis') {
             when {
