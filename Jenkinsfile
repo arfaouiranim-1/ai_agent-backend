@@ -61,7 +61,7 @@ pipeline {
                         dependencyCheck additionalArguments: additionalArguments,
                             odcInstallation: 'owasp-12.1.1'
 
-                        sdependencyCheckPublisher failedTotalCritical: 1,
+                        dependencyCheckPublisher failedTotalCritical: 1,
                             failedTotalHigh: 4,
                             failedTotalLow: 90,
                             failedTotalMedium: 8,
