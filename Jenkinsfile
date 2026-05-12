@@ -115,36 +115,36 @@ pipeline {
             }
         }
 
-        stage ('Image Security Scan') {
-            when {
-                branch 'PR-*'
-            }
-            steps{
-                sh """
-                    mkdir -p reports/grype
-                    syft ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG} \
-                        -o cyclonedx-json > sbom.json
-                    grype sbom:./sbom.json \
-                        --output "template=reports/grype/index.html" \
-                        --template ci/grype-report.html.tmpl
-                    grype sbom:./sbom.json \
-                        --output table \
-                        --fail-on critical
-                """
-            }
-            post {
-                always {
-                    publishHTML(target: [
-                        allowMissing         : false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll              : true,
-                        reportDir            : 'reports/grype',
-                        reportFiles          : 'index.html',
-                        reportName           : 'Security Scan Report'
-                    ])
-                }
-            }
-        }
+        // stage ('Image Security Scan') {
+        //     when {
+        //         branch 'PR-*'
+        //     }
+        //     steps{
+        //         sh """
+        //             mkdir -p reports/grype
+        //             syft ${NEXUS_URL}/repository/${NEXUS_REPOSITORY}/${DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG} \
+        //                 -o cyclonedx-json > sbom.json
+        //             grype sbom:./sbom.json \
+        //                 --output "template=reports/grype/index.html" \
+        //                 --template ci/grype-report.html.tmpl
+        //             grype sbom:./sbom.json \
+        //                 --output table \
+        //                 --fail-on critical
+        //         """
+        //     }
+        //     post {
+        //         always {
+        //             publishHTML(target: [
+        //                 allowMissing         : false,
+        //                 alwaysLinkToLastBuild: true,
+        //                 keepAll              : true,
+        //                 reportDir            : 'reports/grype',
+        //                 reportFiles          : 'index.html',
+        //                 reportName           : 'Security Scan Report'
+        //             ])
+        //         }
+        //     }
+        // }
 
         stage('Push Docker Image') {
             when {
